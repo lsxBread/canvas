@@ -9,7 +9,7 @@ window.onload = function() {
 
     autoSetCanvasSize(canvas);
 
-    listenToMouse(canvas);
+    listenToUser(canvas);
 
     var eraserEnable = false;
     var eraser = document.getElementById('eraser');
@@ -40,50 +40,95 @@ window.onload = function() {
         };
     }
 
-    function listenToMouse(canvas) {
+    function listenToUser(canvas) {
         var usingCanvas = false;
         var lastPoint = {
             x: undefined,
             y: undefined
         };
 
-        canvas.onmousedown = function(e) {
-            usingCanvas = true;
-            var x = e.clientX;
-            var y = e.clientY;
-            if (usingCanvas) {
-                if (eraserEnable) {
-                    context.clearRect(x-5,y-5,10,10);
-                } else {
-                    // drawCircle(x,y);
-                    lastPoint = {
-                        "x": x,
-                        "y": y
-                    };
+        // check if the device support touch or mouse
+        if(document.body.ontouchstart !== undefined ) {
+            canvas.ontouchstart = function(e) {
+                console.log('!!!!!!!!');
+                usingCanvas = true;
+                var x = e.touches[0].clientX;
+                var y = e.touches[0].clientY;
+                if (usingCanvas) {
+                    if (eraserEnable) {
+                        context.clearRect(x-5,y-5,10,10);
+                    } else {
+                        // drawCircle(x,y);
+                        lastPoint = {
+                            "x": x,
+                            "y": y
+                        };
+                    }
                 }
             }
+            
+            canvas.ontouchmove = function(e) {
+                console.log('sss');
+                var x = e.touches[0].clientX;
+                var y = e.touches[0].clientY;
+                if (usingCanvas) {
+                    if (eraserEnable) {
+                        context.clearRect(x-5,y-5,10,10);
+                    } else {
+                        var newPoint = {
+                            "x": x,
+                            "y": y
+                        };
+                        // drawCircle(x,y);
+                        drawLine(lastPoint.x, lastPoint.y,x,y);
+                        lastPoint = newPoint;
+                    }
+                }
+            }
+    
+            canvas.ontouchend = function(e ) {
+                console.log('222');
+                usingCanvas = false;
+            }
+        } else {
+            canvas.onmousedown = function(e) {
+                usingCanvas = true;
+                var x = e.clientX;
+                var y = e.clientY;
+                if (usingCanvas) {
+                    if (eraserEnable) {
+                        context.clearRect(x-5,y-5,10,10);
+                    } else {
+                        // drawCircle(x,y);
+                        lastPoint = {
+                            "x": x,
+                            "y": y
+                        };
+                    }
+                }
+            }
+    
+            canvas.onmousemove = function(e){
+                var x = e.clientX;
+                var y = e.clientY;
+                if (usingCanvas) {
+                    if (eraserEnable) {
+                        context.clearRect(x-5,y-5,10,10);
+                    } else {
+                        var newPoint = {
+                            "x": x,
+                            "y": y
+                        };
+                        // drawCircle(x,y);
+                        drawLine(lastPoint.x, lastPoint.y,x,y);
+                        lastPoint = newPoint;
+                    }
+                }
+            };
+            canvas.onmouseup = function(e){
+                usingCanvas = false;
+            };
         }
-
-        canvas.onmousemove = function(e){
-            var x = e.clientX;
-            var y = e.clientY;
-            if (usingCanvas) {
-                if (eraserEnable) {
-                    context.clearRect(x-5,y-5,10,10);
-                } else {
-                    var newPoint = {
-                        "x": x,
-                        "y": y
-                    };
-                    // drawCircle(x,y);
-                    drawLine(lastPoint.x, lastPoint.y,x,y);
-                    lastPoint = newPoint;
-                }
-            }
-        };
-        canvas.onmouseup = function(e){
-            usingCanvas = false;
-        };
     }
 
     function drawLine(x1,y1,x2,y2) {
