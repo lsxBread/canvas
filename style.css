@@ -138,3 +138,49 @@ canvas {
     0%{width: 50px};
     100%{width: 30px;}
 }
+
+.eraserFunction {
+    position: fixed;
+    left: 30px;
+    top: 80px;
+    display: none;
+    transition: fadeIn 0.3s;
+}
+
+.eraserFunction.active {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+.eraserSizes {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.eraserSizes > li {
+    border-radius: 50%;
+    margin: 15px 0;
+    border:1px solid black;
+}
+
+.eraserSizes > li.active {
+    box-shadow: 0 0 10px rgba(0,0,0,1);
+}
+
+.eraserSizes > li#small {
+    width: 10px;
+    height: 10px;
+}
+
+.eraserSizes > li#middle {
+    width: 15px;
+    height: 15px;
+}
+
+.eraserSizes > li#big {
+    width: 20px;
+    height: 20px;
+}
+

@@ -4,7 +4,8 @@ window.onload = function () {
 
     var dataHash = {
         'lineColor': 'black',
-        'lineWidth': 2
+        'lineWidth': 2,
+        'eraserSize': 10
     };
 
     autoSetCanvasSize(canvas);
@@ -19,14 +20,17 @@ window.onload = function () {
         pen.classList.add('active');
         eraser.classList.remove('active');
         penFunction.classList.add('active');
+        eraserFunction.classList.remove('active');
     };
 
     var eraser = document.getElementById('eraser');
+    var eraserFunction = document.querySelector('div.eraserFunction');
     eraser.onclick = function () {
         eraserEnable = true;
         pen.classList.remove('active');
         eraser.classList.add('active');
         penFunction.classList.remove('active');
+        eraserFunction.classList.add('active');
     };
 
     var bin = document.getElementById('bin');
@@ -39,10 +43,7 @@ window.onload = function () {
         colors[i].onclick = function (e) {
             dataHash['lineColor'] = e.currentTarget.id;
             e.currentTarget.classList.add('active');
-            var siblings = getSiblings(e.currentTarget);
-            for(let i in siblings) {
-                siblings[i].classList.remove('active');
-            };
+            removeSiblingsActive(e.currentTarget);
         };
     };
 
@@ -61,14 +62,37 @@ window.onload = function () {
                     dataHash['lineWidth'] = 8;
                     break;
             };
-            var siblings = getSiblings(e.currentTarget);
-            for(let i in siblings) {
-                siblings[i].classList.remove('active');
-            };
         };
     };
 
+    var eraserSizes = document.querySelectorAll('ol.eraserSizes >li');
+    for (let i in eraserSizes) {
+        eraserSizes[i].onclick = function(e) {
+            e.currentTarget.classList.add('active');
+            switch(e.currentTarget.id) {
+                case 'small':
+                    dataHash['eraserSize'] = 10;
+                    break;
+                case 'middle':
+                    dataHash['eraserSize'] = 15;
+                    break;
+                case 'big':
+                    dataHash['eraserSize'] = 20;
+                    break;
+            };
+            removeSiblingsActive(e.currentTarget);
+            removeSiblingsActive(e.currentTarget);
+        }
+    }
+
     /*utilites*/
+    function removeSiblingsActive(elem) {
+        var siblings = getSiblings(elem);
+        for(let i in siblings) {
+            siblings[i].classList.remove('active');
+        };
+    }
+
     function autoSetCanvasSize(canvas) {
         setCanvasSize(canvas);
         //listen on window resize
@@ -99,7 +123,7 @@ window.onload = function () {
                 var y = e.touches[0].clientY;
                 if (usingCanvas) {
                     if (eraserEnable) {
-                        context.clearRect(x - 5, y - 5, 10, 10);
+                        context.clearRect(x - dataHash['eraserSize']/2, y - dataHash['eraserSize']/2, dataHash['eraserSize'], dataHash['eraserSize']);
                     } else {
                         // drawCircle(x,y);
                         lastPoint = {
@@ -115,7 +139,7 @@ window.onload = function () {
                 var y = e.touches[0].clientY;
                 if (usingCanvas) {
                     if (eraserEnable) {
-                        context.clearRect(x - 5, y - 5, 10, 10);
+                        context.clearRect(x - dataHash['eraserSize']/2, y - dataHash['eraserSize']/2, dataHash['eraserSize'], dataHash['eraserSize']);
                     } else {
                         var newPoint = {
                             "x": x,
@@ -138,7 +162,7 @@ window.onload = function () {
                 var y = e.clientY;
                 if (usingCanvas) {
                     if (eraserEnable) {
-                        context.clearRect(x - 5, y - 5, 10, 10);
+                        context.clearRect(x - dataHash['eraserSize']/2, y - dataHash['eraserSize']/2, dataHash['eraserSize'], dataHash['eraserSize']);
                     } else {
                         // drawCircle(x,y);
                         lastPoint = {
@@ -154,7 +178,7 @@ window.onload = function () {
                 var y = e.clientY;
                 if (usingCanvas) {
                     if (eraserEnable) {
-                        context.clearRect(x - 5, y - 5, 10, 10);
+                        context.clearRect(x - dataHash['eraserSize']/2, y - dataHash['eraserSize']/2, dataHash['eraserSize'], dataHash['eraserSize']);
                     } else {
                         var newPoint = {
                             "x": x,
