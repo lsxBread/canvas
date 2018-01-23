@@ -3,6 +3,28 @@ body {
 }
 
 canvas {
-    background: green;
+    background: white;
     display: block;
+}
+
+.actions {
+    position: fixed;
+    left: 0;
+    bottom: 50%;
+}
+
+.actions > #brush {
+    display: none;
+}
+
+.actions.active > #brush {
+    display: inline-block;
+}
+
+.actions.active > #eraser {
+    display: none;
+}
+
+#eraser, #brush {
+    font-size: 20px;
 }
