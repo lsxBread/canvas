@@ -29,6 +29,11 @@ window.onload = function () {
         penFunction.classList.remove('active');
     };
 
+    var bin = document.getElementById('bin');
+    bin.onclick = function() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
     var colors = document.querySelectorAll('ol.colors > li');
     for (let i in colors) {
         colors[i].onclick = function (e) {

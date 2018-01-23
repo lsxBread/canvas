@@ -109,6 +109,7 @@ canvas {
     height: 0;
     width: 30px;
     margin: 1em 0;
+    animation: short 0.3s;
 }
 
 .lineSize > li#thin {
@@ -131,4 +132,9 @@ canvas {
 @keyframes extend {
     0%{width: 30px};
     100%{width: 50px;}
+}
+
+@keyframes short {
+    0%{width: 50px};
+    100%{width: 30px;}
 }
