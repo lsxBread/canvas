@@ -9,9 +9,11 @@ window.onload = function () {
     };
 
     autoSetCanvasSize(canvas);
-
     listenToUser(canvas);
 
+    /*
+    liten on button
+    */
     var eraserEnable = false;
     var penFunction = document.querySelector('div.penFunction');
     var pen = document.getElementById('pen');
@@ -38,6 +40,19 @@ window.onload = function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
+    var download = document.getElementById('download');
+    download.onclick = function() {
+        var url = canvas.toDataURL('imgae/png');
+        var a = document.createElement('a');
+        document.body.appendChild(a);
+        a.href = url; 
+        a.download = 'canvas';
+        a.click();
+    }
+
+    /*
+    listen on pen options
+    */
     var colors = document.querySelectorAll('ol.colors > li');
     for (let i in colors) {
         colors[i].onclick = function (e) {
@@ -62,9 +77,13 @@ window.onload = function () {
                     dataHash['lineWidth'] = 8;
                     break;
             };
+            removeSiblingsActive(e.currentTarget);
         };
     };
 
+    /*
+    listen on eraser  options
+    */
     var eraserSizes = document.querySelectorAll('ol.eraserSizes >li');
     for (let i in eraserSizes) {
         eraserSizes[i].onclick = function(e) {
@@ -80,7 +99,6 @@ window.onload = function () {
                     dataHash['eraserSize'] = 20;
                     break;
             };
-            removeSiblingsActive(e.currentTarget);
             removeSiblingsActive(e.currentTarget);
         }
     }
