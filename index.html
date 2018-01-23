@@ -6,18 +6,35 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./style.css">
-    
+    <script src="//at.alicdn.com/t/font_551866_q66g1kblbsf3l3di.js"></script>
     <title>Canvas</title>
 </head>
 
 <body>
     <canvas id="canvas" width=300 height=300></canvas>
     <div id=actions class="actions">
-        <button id=eraser>橡皮擦</button>
-        <button id=brush>画笔</button>
+        <svg class="icon active" aria-hidden="true" id="pen">
+            <use xlink:href="#icon-pen"></use>
+        </svg>
+        <svg class="icon" aria-hidden="true" id="eraser">
+            <use xlink:href="#icon-eraser"></use>
+        </svg>
+    </div>
+    <div class="penFunction active">
+        <ol class="colors">
+            <li id='black' class="black active"></li>
+            <li id="red" class="red"></li>
+            <li id="blue" class="blue"></li>
+            <li id="green" class="green"></li>
+        </ol>
+        <ol class="lineSize">
+            <li id="thin" class="active"></li>
+            <li id="middle"></li>
+            <li id="thick"></li>
+        </ol>
     </div>
 
     <script src="./main.js"></script>
 </body>
- 
+
 </html>

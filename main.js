@@ -1,10 +1,10 @@
-window.onload = function() {
+window.onload = function () {
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
 
     var dataHash = {
         'lineColor': 'black',
-        'lineWidth': 5
+        'lineWidth': 2
     };
 
     autoSetCanvasSize(canvas);
@@ -12,23 +12,62 @@ window.onload = function() {
     listenToUser(canvas);
 
     var eraserEnable = false;
-    var eraser = document.getElementById('eraser');
-    var brush = document.getElementById('brush');
-    var actions = document.getElementById('actions');
-    eraser.onclick = function() {
-        eraserEnable = true;
-        actions.className = 'actions active';
-    };
-    brush.onclick = function() {
+    var penFunction = document.querySelector('div.penFunction');
+    var pen = document.getElementById('pen');
+    pen.onclick = function () {
         eraserEnable = false;
-        actions.className = 'actions';
+        pen.classList.add('active');
+        eraser.classList.remove('active');
+        penFunction.classList.add('active');
+    };
+
+    var eraser = document.getElementById('eraser');
+    eraser.onclick = function () {
+        eraserEnable = true;
+        pen.classList.remove('active');
+        eraser.classList.add('active');
+        penFunction.classList.remove('active');
+    };
+
+    var colors = document.querySelectorAll('ol.colors > li');
+    for (let i in colors) {
+        colors[i].onclick = function (e) {
+            dataHash['lineColor'] = e.currentTarget.id;
+            e.currentTarget.classList.add('active');
+            var siblings = getSiblings(e.currentTarget);
+            for(let i in siblings) {
+                siblings[i].classList.remove('active');
+            };
+        };
+    };
+
+    var lineSizes = document.querySelectorAll('ol.lineSize > li');
+    for (let i in lineSizes) {
+        lineSizes[i].onclick = function(e) {
+            e.currentTarget.classList.add('active');
+            switch(e.currentTarget.id) {
+                case 'thin':
+                    dataHash['lineWidth'] = 2;
+                    break;
+                case 'middle':
+                    dataHash['lineWidth'] = 5;
+                    break;
+                case 'thick':
+                    dataHash['lineWidth'] = 8;
+                    break;
+            };
+            var siblings = getSiblings(e.currentTarget);
+            for(let i in siblings) {
+                siblings[i].classList.remove('active');
+            };
+        };
     };
 
     /*utilites*/
     function autoSetCanvasSize(canvas) {
         setCanvasSize(canvas);
         //listen on window resize
-        window.onresize = function() {
+        window.onresize = function () {
             setCanvasSize(canvas);
         };
 
@@ -48,15 +87,14 @@ window.onload = function() {
         };
 
         // check if the device support touch or mouse
-        if(document.body.ontouchstart !== undefined ) {
-            canvas.ontouchstart = function(e) {
-                console.log('!!!!!!!!');
+        if (document.body.ontouchstart !== undefined) {
+            canvas.ontouchstart = function (e) {
                 usingCanvas = true;
                 var x = e.touches[0].clientX;
                 var y = e.touches[0].clientY;
                 if (usingCanvas) {
                     if (eraserEnable) {
-                        context.clearRect(x-5,y-5,10,10);
+                        context.clearRect(x - 5, y - 5, 10, 10);
                     } else {
                         // drawCircle(x,y);
                         lastPoint = {
@@ -66,38 +104,36 @@ window.onload = function() {
                     }
                 }
             }
-            
-            canvas.ontouchmove = function(e) {
-                console.log('sss');
+
+            canvas.ontouchmove = function (e) {
                 var x = e.touches[0].clientX;
                 var y = e.touches[0].clientY;
                 if (usingCanvas) {
                     if (eraserEnable) {
-                        context.clearRect(x-5,y-5,10,10);
+                        context.clearRect(x - 5, y - 5, 10, 10);
                     } else {
                         var newPoint = {
                             "x": x,
                             "y": y
                         };
                         // drawCircle(x,y);
-                        drawLine(lastPoint.x, lastPoint.y,x,y);
+                        drawLine(lastPoint.x, lastPoint.y, x, y);
                         lastPoint = newPoint;
                     }
                 }
             }
-    
-            canvas.ontouchend = function(e ) {
-                console.log('222');
+
+            canvas.ontouchend = function (e) {
                 usingCanvas = false;
             }
         } else {
-            canvas.onmousedown = function(e) {
+            canvas.onmousedown = function (e) {
                 usingCanvas = true;
                 var x = e.clientX;
                 var y = e.clientY;
                 if (usingCanvas) {
                     if (eraserEnable) {
-                        context.clearRect(x-5,y-5,10,10);
+                        context.clearRect(x - 5, y - 5, 10, 10);
                     } else {
                         // drawCircle(x,y);
                         lastPoint = {
@@ -107,46 +143,54 @@ window.onload = function() {
                     }
                 }
             }
-    
-            canvas.onmousemove = function(e){
+
+            canvas.onmousemove = function (e) {
                 var x = e.clientX;
                 var y = e.clientY;
                 if (usingCanvas) {
                     if (eraserEnable) {
-                        context.clearRect(x-5,y-5,10,10);
+                        context.clearRect(x - 5, y - 5, 10, 10);
                     } else {
                         var newPoint = {
                             "x": x,
                             "y": y
                         };
                         // drawCircle(x,y);
-                        drawLine(lastPoint.x, lastPoint.y,x,y);
+                        drawLine(lastPoint.x, lastPoint.y, x, y);
                         lastPoint = newPoint;
                     }
                 }
             };
-            canvas.onmouseup = function(e){
+            canvas.onmouseup = function (e) {
                 usingCanvas = false;
             };
         }
     }
 
-    function drawLine(x1,y1,x2,y2) {
+    function drawLine(x1, y1, x2, y2) {
         context.beginPath();
         context.strokeStyle = dataHash['lineColor'];
         context.lineWidth = dataHash['lineWidth'];
         context.lineJoin = 'round';
         context.lineCap = 'round';
-        context.moveTo(x1,y1);
-        context.lineTo(x2,y2);
+        context.moveTo(x1, y1);
+        context.lineTo(x2, y2);
         context.closePath();
         context.stroke();
     }
 
-    function drawCircle(x,y) {
-        context.beginPath();
-        context.fillStyle = dataHash['lineColor'];
-        context.arc(x,y,dataHash['lineWidth'],0,Math.PI * 2);
-        context.fill();
+    /**
+    * Get siblings of an element
+    * @param  {Element} elem
+    * @return {Object}
+    */
+    function getSiblings(elem) {
+        var siblings = [];
+        var sibling = elem.parentNode.firstChild;
+        var skipMe = elem;
+        for (; sibling; sibling = sibling.nextSibling)
+            if (sibling.nodeType == 1 && sibling != elem)
+                siblings.push(sibling);
+        return siblings;
     }
 }
